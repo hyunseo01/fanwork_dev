@@ -1,9 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { BaseTimeEntity } from '../../common/entities/BaseTime.entity';
 
 export enum InternalUserRole {
   ADMIN = 'ADMIN',
@@ -17,28 +13,25 @@ export enum InternalUserStatus {
 }
 
 @Entity('internal_users')
-export class InternalUser {
+export class InternalUser extends BaseTimeEntity {
   @PrimaryGeneratedColumn('increment')
-  id: number;
+  id: number; // PK
 
   @Column({ length: 20 })
-  name: string;
+  name: string; // 이름
 
   @Column({ unique: true })
-  email: string;
+  email: string; // 이메일 (고유)
 
   @Column()
-  passwordHash: string;
+  passwordHash: string; // 해시된 비밀번호
 
   @Column({ type: 'enum', enum: InternalUserStatus })
-  status: InternalUserStatus;
+  status: InternalUserStatus; // 계정 상태
 
   @Column({ type: 'enum', enum: InternalUserRole })
-  role: InternalUserRole;
-
-  @CreateDateColumn()
-  createdAt: Date;
+  role: InternalUserRole; // 관리자 역할 (ADMIN, MANAGER 등)
 
   @Column({ type: 'timestamp', nullable: true })
-  lastLoginAt: Date;
+  lastLoginAt: Date; // 마지막 로그인 시각
 }

@@ -8,6 +8,7 @@ import {
 import { Project } from 'src/projects/entities/project.entity';
 import { Partner } from 'src/partners/entities/partner.entity';
 import { InternalUser } from 'src/internal-users/entities/internal-user.entity';
+import { BaseTimeEntity } from '../../common/entities/BaseTime.entity';
 
 export enum ContractType {
   ONE_TIME_PROJECT = 'ONE_TIME_PROJECT',
@@ -25,54 +26,42 @@ export enum ContractStatus {
 }
 
 @Entity('contracts')
-export class Contract {
+export class Contract extends BaseTimeEntity {
   @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'ticket_id' })
-  projectId: number;
+  id: number; // PK
 
   @ManyToOne(() => Project, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ticket_id' })
-  project: Project;
+  project: Project; // 연결된 프로젝트
 
   @Column({ name: 'contract_title', length: 255 })
-  contractTitle: string;
-
-  @Column({ name: 'primary_account_id' })
-  primaryAccountId: number;
+  contractTitle: string; // 계약 제목
 
   @ManyToOne(() => Partner, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'primary_account_id' })
-  primaryAccount: Partner;
-
-  @Column({ name: 'payer_account_id' })
-  payerAccountId: number;
+  primaryAccount: Partner; // 계약 주체 (대표 파트너)
 
   @ManyToOne(() => Partner, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'payer_account_id' })
-  payerAccount: Partner;
-
-  @Column({ name: 'provider_account_id' })
-  providerAccountId: number;
+  payerAccount: Partner; // 실제 비용 지불 파트너
 
   @ManyToOne(() => Partner, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'provider_account_id' })
-  providerAccount: Partner;
+  providerAccount: Partner; // 서비스 제공 파트너
 
   @Column({
     name: 'contract_type',
     type: 'enum',
     enum: ContractType,
   })
-  contractType: ContractType;
+  contractType: ContractType; // 계약 유형
 
   @Column({
     name: 'contract_status',
     type: 'enum',
     enum: ContractStatus,
   })
-  contractStatus: ContractStatus;
+  contractStatus: ContractStatus; // 계약 상태
 
   @Column({
     name: 'total_value_usd',
@@ -81,27 +70,24 @@ export class Contract {
     scale: 2,
     nullable: true,
   })
-  totalValueUsd: number;
+  totalValueUsd: number; // 총 계약 금액 (USD)
 
   @Column({ length: 3 })
-  currency: string;
+  currency: string; // 통화 (예: USD, KRW)
 
   @Column({ name: 'contract_date', type: 'date', nullable: true })
-  contractDate: Date;
+  contractDate: Date; // 계약 서명일
 
   @Column({ name: 'effective_start_date', type: 'date' })
-  effectiveStartDate: Date;
+  effectiveStartDate: Date; // 계약 효력 시작일
 
   @Column({ name: 'effective_end_date', type: 'date' })
-  effectiveEndDate: Date;
+  effectiveEndDate: Date; // 계약 효력 종료일
 
   @Column({ name: 'contract_document_url', length: 255 })
-  contractDocumentUrl: string;
-
-  @Column({ name: 'created_by' })
-  createdById: number;
+  contractDocumentUrl: string; // 계약서 파일 URL
 
   @ManyToOne(() => InternalUser, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
-  createdBy: InternalUser;
+  createdBy: InternalUser; // 계약 등록자 (내부 관리자)
 }

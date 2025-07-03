@@ -6,19 +6,17 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Partner } from '../../partners/entities/partner.entity';
+import { BaseTimeEntity } from '../../common/entities/BaseTime.entity';
 
 @Entity('organizations')
-export class Organization {
+export class Organization extends BaseTimeEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number; // PK
 
   @Column()
-  accountId: number;
-
-  @Column()
-  address: string;
+  address: string; // 조직 주소
 
   @ManyToOne(() => Partner, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'account_id' })
-  partner: Partner;
+  partner: Partner; // 연결된 파트너 (법인 계정)
 }

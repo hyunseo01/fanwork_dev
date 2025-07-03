@@ -1,9 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { BaseTimeEntity } from '../../common/entities/BaseTime.entity';
 
 export enum PartnerEntityType {
   ORGANIZATION = 'Organizations',
@@ -21,55 +17,52 @@ export enum RegistrationType {
 }
 
 @Entity('partners')
-export class Partner {
+export class Partner extends BaseTimeEntity {
   @PrimaryGeneratedColumn('increment')
-  id: number;
+  id: number; // PK
 
   @Column({ unique: true })
-  email: string;
+  email: string; // 로그인 이메일
 
   @Column()
-  passwordHash: string;
+  passwordHash: string; // 해시된 비밀번호
 
   @Column({ type: 'enum', enum: PartnerEntityType })
-  entityType: PartnerEntityType;
+  entityType: PartnerEntityType; // 개인 or 법인
 
   @Column({ length: 20 })
-  displayName: string;
+  displayName: string; // 표시 이름 (닉네임)
 
   @Column({ type: 'enum', enum: PartnerStatus })
-  status: PartnerStatus;
+  status: PartnerStatus; // 계정 활성 상태
 
   @Column({ nullable: true, length: 20 })
-  businessRegistrationNumber: string;
+  businessRegistrationNumber: string; // 사업자등록번호 (optional)
 
   @Column({ type: 'jsonb', nullable: true })
-  primaryContacts: any;
+  primaryContacts: any; // 주요 연락처 정보
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string; // 설명
 
   @Column({ type: 'jsonb', nullable: true })
-  details: any;
-
-  @CreateDateColumn()
-  createdAt: Date;
+  details: any; // 상세 정보
 
   @Column({ type: 'simple-array' })
-  accountRoles: string[];
+  accountRoles: string[]; // 역할 목록 (예: 담당자, 결제자 등)
 
   @Column({ default: false })
-  isKeyPlayer: boolean;
+  isKeyPlayer: boolean; // 주요 의사결정자 여부
 
   @Column({ length: 2 })
-  countryCode: string;
+  countryCode: string; // 국가 코드
 
   @Column({ type: 'enum', enum: RegistrationType })
-  registrationType: RegistrationType;
+  registrationType: RegistrationType; // 등록 유형 (내부/지원)
 
   @Column({ type: 'timestamp', nullable: true })
-  lastLoginAt: Date;
+  lastLoginAt: Date; // 마지막 로그인 시각
 
   @Column({ nullable: true })
-  website: string;
+  website: string; // 홈페이지 URL
 }
